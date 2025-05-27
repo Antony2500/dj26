@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}First Form{% endblock title %}
+
+{% load static %}
+{% block static_files %}
+<link rel="stylesheet" href="static/css/messages_django.css">
+{% endblock %}
+
+{% block content %}
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" value="Submit">
+        </form>
+        {% if messages %}
+
+            {% for message in messages %}
+                <div class="popup-message {{ message.tags }}">
+                  <h3>{{ message.tags }}</h3>>
+                  <h4>{{ message }}</h4>
+                </div>
+            {% endfor %}
+
+        {% endif %}
+    </div>
+{% endblock content %}
