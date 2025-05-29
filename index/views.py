@@ -1,9 +1,10 @@
 import datetime
 
+from django.contrib.auth import login
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
-from .forms import RenewBookForm, StuffForm
+from .forms import RenewBookForm, StuffForm, RegisterUser
 
 
 def index(request):
@@ -46,3 +47,19 @@ def second_custom_form(request):
     context = {"form": form}
 
     return render(request, "first_form.html", context=context)
+
+
+def register_user(request):
+    if request.method == "POST":
+        form = RegisterUser(request.POST)
+
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect("/")
+        else:
+            return redirect("/register")
+
+    form = RegisterUser()
+
+    return render(request, "register.html", context={"form": form})
