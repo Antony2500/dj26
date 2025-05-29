@@ -18,7 +18,10 @@
                 <li><a href="#">About us</a></li>
                 <li><a href="#">Contact us</a></li>
                 {% if user.is_authenticated %}
-                    <li><a href="custom_auth/logout">Logout</a></li>
+                    {% if user.is_staff == True %}
+                        <li><a href="/admin">Admin</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'custom_logout' %}">Logout</a></li>
                 {% endif %}
             </ul>
         </nav>

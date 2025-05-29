@@ -25,8 +25,8 @@ class RenewBookForm(forms.Form):
 class StuffForm(forms.ModelForm):
     class Meta:
         model = Stuff
-        # fields = "__all__"
-        fields = ["stuff_name", "price"]
+        fields = "__all__"
+        # fields = ["stuff_name", "price"]
 
 
 class RegisterUser(UserCreationForm):

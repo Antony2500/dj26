@@ -1,6 +1,7 @@
 import datetime
 
-from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
@@ -43,7 +44,6 @@ def second_custom_form(request):
         return redirect("form2")
 
     form = StuffForm()
-
     context = {"form": form}
 
     return render(request, "first_form.html", context=context)
@@ -63,3 +63,8 @@ def register_user(request):
     form = RegisterUser()
 
     return render(request, "register.html", context={"form": form})
+
+@login_required
+def logout_user(request):
+    logout(request)
+    return redirect("/")
