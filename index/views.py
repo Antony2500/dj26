@@ -2,11 +2,11 @@ import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib import messages
 
 from .forms import RenewBookForm, StuffForm, RegisterUser
-
+from .models import Stuff
 
 def index(request):
     return render(request, "index.html", context={"title": "Main"})
@@ -64,7 +64,50 @@ def register_user(request):
 
     return render(request, "register.html", context={"form": form})
 
+
 @login_required
 def logout_user(request):
     logout(request)
     return redirect("/")
+
+@login_required
+def get_stuff(request, id_: int):
+    stuff = Stuff.objects.get(pk=id_)
+    print(stuff)
+    return HttpResponse(f"{[stuff.pk, stuff.stuff_name, stuff.stuff_desc, stuff.price, stuff.photo]}")
+
+def get_all_stuff(request):
+    all_stuff = Stuff.objects.all()
+    print(type(all_stuff))
+    return HttpResponse(all_stuff)
+
+def create_stuff(request):
+    new_stuff = Stuff(
+        stuff_name="Book",
+        stuff_desc="Tralelo Tralala",
+        photo="",
+        price=15151
+    )
+
+    new_stuff.save()
+    return HttpResponse("Work")
+
+def get_or_create_stuff(request, id_: int):
+    stuff = Stuff.objects.get_or_create(pk=id_, defaults={"price": 1})
+    return HttpResponse(stuff)
+
+def update_stuff(request, id_: int):
+    stuff = get_object_or_404(Stuff, pk=id_)
+
+    stuff.stuff_name = "Optimus Prime"
+    stuff.save()
+
+    return HttpResponse(stuff)
+
+def delete_stuff(request, id_: int):
+    stuff = get_object_or_404(Stuff, pk=id_)
+
+    stuff.delete()
+    stuff.save()
+
+    return HttpResponse(stuff)
