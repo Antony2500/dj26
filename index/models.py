@@ -17,7 +17,6 @@ class Stuff(models.Model):
     stuff_desc = models.CharField(max_length=257)
     photo = models.CharField(max_length=100)
     price = models.IntegerField(validators=[MinValueValidator(1)])
-    color = models.ForeignKey()
 
     def publish(self):
         self.save()
@@ -32,9 +31,3 @@ class Author(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=100)
     authors = models.ManyToManyField(Author)
-
-book = Book.objects.get(pk=1)
-author1 = Author.objects.get(pk=1)
-author2 = Author.objects.get(pk=2)
-
-book.authors.set([author1, author2])
