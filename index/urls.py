@@ -4,7 +4,7 @@ from django.urls import path
 from .views import (index, test_login, first_custom_form,
                     second_custom_form, register_user, logout_user,
                     get_stuff, get_all_stuff, create_stuff, get_or_create_stuff, update_stuff, delete_stuff,
-                    request_info_check, redirect_view, info_view, AboutUs, StuffListView)
+                    request_info_check, redirect_view, info_view, AboutUs, StuffListView, get_all_stuff2)
 
 urlpatterns = [
     path("", index, name="index"),
@@ -24,5 +24,7 @@ urlpatterns = [
     path("redirect_view/<int:pk>/<str:stuff_name>", redirect_view),
     path("info_view/<int:pk>/<str:stuff_name>", info_view, name="info_stuff"),
     path("about_us", AboutUs.as_view()),
-    path("stuff", StuffListView.as_view())
+    path("stuff", StuffListView.as_view()),
+
+    path("all_stuff", get_all_stuff2)
 ]

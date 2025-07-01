@@ -5,6 +5,7 @@ from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
+from django.core.paginator import Paginator
 
 from .forms import RenewBookForm, StuffForm, RegisterUser
 from .models import Stuff
@@ -188,3 +189,15 @@ class StuffListView(ListView):
     def get(self, *args, **kwargs):
         pass
 
+
+def get_all_stuff2(request):
+    all_stuff = Stuff.objects.all()
+    paginator = Paginator(all_stuff, 2)
+
+    if "page" in request.GET:
+        page_num = request.GET.get("page", 1)
+    else:
+        page_num = 1
+
+    page = paginator.get_page(page_num)
+    return render(request, "stuff.html", {"page": page, "stuffs": page.object_list})

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %} Stuff {% endblock title %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+     <ul>
+        {% for stuff in stuffs %}
+            <li>
+              <h1>{{ forloop.counter }} - номер поточної ітерації циклу (нумерація починається cl); </h1>
+              <h1>{{ forloop.counter0 }} - номер поточної ітерації циклу (нумерація починається з 0); </h1>
+              <h1>{{ forloop.first }} — True, якщо це перша ітерація циклу, False, якщо не перша;  </h1>
+              <h1>{{ forloop.last  }} — True, якщо це остання ітерація циклу, False, якщо не остання;</h1>
+              <h1>{{ forloop.parentloop }} — застосовується у вкладеному циклі і зберігає посилання на "зовнішній" цикл.</h1>
+
+              <img src="{% static 'img/' %}{{ stuff.photo }}" alt="Product 4">
+              <h3>{{ stuff.stuff_name|title }}</h3>
+              <p>{{ stuff.stuff_desc|lower|default:"Empty" }}</p>
+
+              {% if stuff.price >= 10 %}
+                <h4>Price: <b>{{ stuff.price|intcomma }}$</b></h4>
+              {% else %}
+                <h4>Price: <b>{{ stuff.price|apnumber }} $</b></h4>
+              {% endif %}
+              <button>Add to Cart</button>
+            </li>
+        {% endfor %}
+     </ul>
+     <div>
+        {% if page.has_previous %}
+            <a href="?page={{ page.previous_page_number }}">&lt;</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+        {% endif %}
+        Number №{{ page.number }} of {{ page.paginator.num_pages }}
+        {% if page.has_next %}
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="?page={{ page.next_page_number }}">&gt;</a>
+        {% endif %}
+     </div>
+
+{% endblock content %}
