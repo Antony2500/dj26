@@ -28,6 +28,15 @@ class Stuff(models.Model):
 class Author(models.Model):
     name = models.CharField(max_length=100)
 
+    def __str__(self):
+        return f"{self.name}"
+
 class Book(models.Model):
     title = models.CharField(max_length=100)
     authors = models.ManyToManyField(Author)
+    code = models.CharField(max_length=10, default="")
+
+
+class Product(models.Model):
+    title = models.CharField(max_length=100)
+    price = models.IntegerField(validators=[MinValueValidator(1)])

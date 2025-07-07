@@ -4,9 +4,9 @@ from .models import *
 
 # Register your models here.
 
-@admin.register(User, Profile)
-class Index(admin.ModelAdmin):
-    pass
+# @admin.register(User, Profile)
+# class Index(admin.ModelAdmin):
+#     pass
 
 @admin.register(GoITeeens)
 class MyModelAdmin(admin.ModelAdmin):

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'index',
     'index2'
 ]
@@ -55,7 +56,7 @@ ROOT_URLCONF = 'lessons_django.urls'
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'BACKEND': 'django.template.backends.django.DjangoTemplates', # django.template.backends.jinja2.Jinja2
         'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {

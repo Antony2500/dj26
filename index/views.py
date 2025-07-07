@@ -6,9 +6,10 @@ from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
 from django.core.paginator import Paginator
+from django.forms import modelformset_factory
 
-from .forms import RenewBookForm, StuffForm, RegisterUser
-from .models import Stuff
+from .forms import RenewBookForm, StuffForm, RegisterUser, BookForm, BookForm2
+from .models import Stuff, Book
 
 def index(request):
     return render(request, "index.html", context={"title": "Main"})
@@ -201,3 +202,40 @@ def get_all_stuff2(request):
 
     page = paginator.get_page(page_num)
     return render(request, "stuff.html", {"page": page, "stuffs": page.object_list})
+
+
+def create_new_product(request):
+    if request.method == "POST":
+        pass
+
+    form = BookForm()
+
+    return render(request, "new_form.html", {"form": form})
+
+
+def book_edit_view(request):
+    BookFormSet = modelformset_factory(Book, BookForm2, extra=0)
+
+    if request.method == "POST":
+        formset = BookFormSet(request.POST)
+        if formset.is_valid():
+            formset.save()
+            return redirect("book_formset")
+
+    formset = BookFormSet(queryset=Book.objects.all())
+
+    return render(request, "formset.html", {"formset": formset})
+
+
+def create_book_view_set(request):
+    BookFormSet = modelformset_factory(Book, BookForm2, extra=3)
+
+    if request.method == "POST":
+        formset = BookFormSet(request.POST, queryset=Book.objects.none())
+        if formset.is_valid():
+            formset.save()
+            return redirect("create_book_formset")
+
+    formset = BookFormSet(queryset=Book.objects.none())
+
+    return render(request, "formset.html", {"formset": formset})

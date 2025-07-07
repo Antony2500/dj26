@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <title>{% block title %} GoITeens {% endblock %}</title>
     {% load static %}
-    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
     {% block static_files %}
+        {% load static %}
     {% endblock %}
+
 </head>
 <body>
     <header>

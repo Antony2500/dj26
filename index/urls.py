@@ -4,7 +4,8 @@ from django.urls import path
 from .views import (index, test_login, first_custom_form,
                     second_custom_form, register_user, logout_user,
                     get_stuff, get_all_stuff, create_stuff, get_or_create_stuff, update_stuff, delete_stuff,
-                    request_info_check, redirect_view, info_view, AboutUs, StuffListView, get_all_stuff2)
+                    request_info_check, redirect_view, info_view, AboutUs, StuffListView, get_all_stuff2,
+                    create_new_product, book_edit_view, create_book_view_set)
 
 urlpatterns = [
     path("", index, name="index"),
@@ -26,5 +27,8 @@ urlpatterns = [
     path("about_us", AboutUs.as_view()),
     path("stuff", StuffListView.as_view()),
 
-    path("all_stuff", get_all_stuff2)
+    path("all_stuff", get_all_stuff2),
+    path("2", create_new_product),
+    path("formset", book_edit_view, name="book_formset"),
+    path("create_book_view_set", create_book_view_set, name="create_book_formset")
 ]

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %} Product {% endblock title %}
+
+{% block content %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        <table>
+            <p>---------------------------------------</p>
+            {% for form in formset %}
+            <tr>
+                <td>{{ form.title }}</td>
+                <td>{{ form.authors }}</td>
+                <td>{{ form.code }}</td>
+                <td>{{ form.errors }}</td>
+            </tr>
+            <p>---------------------------------------</p>
+            {% endfor %}
+        </table>
+        <button type="submit">Save</button>>
+    </form >
+
+{% endblock content %}
