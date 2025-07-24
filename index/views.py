@@ -1,18 +1,47 @@
 import datetime
+from lib2to3.fixes.fix_input import context
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
+from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
+from django.db.models import Q
+from django.template.loader import render_to_string
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
 from django.core.paginator import Paginator
 from django.forms import modelformset_factory
+from django.core.mail import send_mail
+from django.contrib.auth.forms import PasswordResetForm
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 
 from .forms import RenewBookForm, StuffForm, RegisterUser, BookForm, BookForm2
-from .models import Stuff, Book
+from .models import Stuff, Book, Article
 
 def index(request):
-    return render(request, "index.html", context={"title": "Main"})
+    if 'counter' in request.COOKIES:
+        ent = int(request.COOKIES['counter']) + 1
+    else:
+        ent = 1
+    print(request.session)
+    response = render(request, "index.html", context={"title": "Main"})
+    response.set_cookie(
+        "counter",  # Назва cookie
+        ent,  # Значення cookie
+        max_age=None,  # Час життя в секундах
+        expires=None,  # Дата/час, коли cookie стане неактивним
+        path='/',  # Шлях, на якому cookie буде доступне
+        domain=None,  # Домен, на якому cookie буде доступне
+        secure=False,  # Чи надсилати cookie лише через HTTPS
+        httponly=False,  # Чи доступне cookie лише через HTTP (не JS)
+    )
+    if request.session:
+        print(request.session.session_key)
+        request.session.set_expiry(300)
+        request.session.get_expiry_date() # get_expiry_age
+    return response
 
 def test_login(request):
     return render(request, "test_login.html", context={"title": "Main"})
@@ -239,3 +268,84 @@ def create_book_view_set(request):
     formset = BookFormSet(queryset=Book.objects.none())
 
     return render(request, "formset.html", {"formset": formset})
+
+
+def my_view(request):
+    messages.debug(request, 'This is a debug message.')
+    messages.info(request, 'This is an informational message.')
+    messages.success(request, 'This is a success message.')
+    messages.warning(request, 'This is a warning message.')
+    messages.error(request, 'This is an error message.')
+    return render(request, 'my_template.html')
+
+def test_signal(request):
+    user = User.objects.create_user(username='tony', password='secret')
+    return HttpResponse(f"{user}")
+
+
+def create_article(request):
+    article = Article(
+        title="AI caan provid,,,e ,  ...new opport.uni.ty   ! to  treat all cancer problems  ! ",
+        content="huf92gbu-y9fb-y92fby92by92b8y-cbu8ydfb28yubde2hubehu2uhnd2uhndub-2ub-hn92fubn",
+    )
+    article.save()
+    return HttpResponse(f"{article}")
+
+
+def send_mail_console(request):
+    response = send_mail(
+        subject="Registration email",
+        message="Дякуємо, що зареєструвались",
+        from_email=None,
+        recipient_list=['anton.andreiev2003@gmail.com'],
+        fail_silently=False,
+        html_message="""<h2 style="color:#2c7be5">Вітаємо у сервісі!</h2>
+        <p>Дякуємо, що <b>зареєструвались</b>.</p>
+        <a href="http://127.0.0.1:8000/" style="padding:8px 16px;
+           background:#2c7be5;color:#fff;text-decoration:none;border-radius:4px">
+           Перейти на сайт
+        </a>
+        """
+    )
+    return HttpResponse(f"{response}")
+
+
+def bad_request(request):
+    return render(request, "400.html")
+
+
+def reset_password(request):
+    if request.method == "POST":
+        password_reset_form = PasswordResetForm(request.POST)
+        if password_reset_form.is_valid():
+            data = password_reset_form.cleaned_data["email"]
+            user_from_form = User.objects.filter(Q(email=data))
+            if user_from_form.exists():
+                for user in user_from_form:
+                    subject = "Password Reset Requested"
+                    email_template_name = "registration/password_reset_email.html"
+                    c = {
+                        "email": user.email,
+                        'domain': '127.0.0.1:8000',
+                        'site_name': 'Website',
+                        "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                        "user": user,
+                        'token': default_token_generator.make_token(user),
+                        'protocol': 'http',
+                    }
+                    email = render_to_string(email_template_name, c)
+                    try:
+                        send_mail(subject, email, None, [user.email], fail_silently=False)
+                    except Exception as e:
+                        print(e)
+                        return redirect("400_bad_request")
+                    return redirect("accounts/password_reset/done/")
+
+        return redirect("400_bad_request")
+
+    password_reset_form = PasswordResetForm()
+    return render(
+        request,
+        "registration/password_reset.html",
+        context={"password_reset_form": password_reset_form}
+    )

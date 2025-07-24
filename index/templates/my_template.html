@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %} Messages {% endblock title %}
+{% load static %}
+{% block static_files %}
+    <link rel="stylesheet" href="{% static 'css/my_template.css' %}">
+{% endblock static_files %}
+{% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="popup-message {{ message.tags }}">{{message}}</div>>
+        {% endfor %}
+    {% endif %}
+
+{% endblock content %}

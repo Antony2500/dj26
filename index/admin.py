@@ -4,7 +4,7 @@ from .models import *
 
 # Register your models here.
 
-@admin.register(Person, Stuff, Author)
+@admin.register(Person, Stuff, Author, Profile, Article)
 class Index(admin.ModelAdmin):
     pass
 

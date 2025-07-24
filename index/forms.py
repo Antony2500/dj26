@@ -4,7 +4,7 @@ import re
 from django import forms
 from django.forms import modelform_factory
 from django.core.exceptions import ValidationError
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 from django.contrib.auth.models import User
 
 from .models import Stuff, Product, Book
@@ -61,3 +61,4 @@ class BookForm2(forms.ModelForm):
         if not re.match(pattern, code):
             raise ValidationError("Code must start with 'A' and be at least 5 characters long")
         return code
+
