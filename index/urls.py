@@ -6,7 +6,7 @@ from .views import (index, test_login, first_custom_form,
                     get_stuff, get_all_stuff, create_stuff, get_or_create_stuff, update_stuff, delete_stuff,
                     request_info_check, redirect_view, info_view, AboutUs, StuffListView, get_all_stuff2,
                     create_new_product, book_edit_view, create_book_view_set, my_view, test_signal, create_article,
-                    send_mail_console, bad_request, reset_password
+                    send_mail_console, bad_request, reset_password, example_expensive_operation, my_cache
                     )
 
 urlpatterns = [
@@ -38,5 +38,7 @@ urlpatterns = [
     path("test-signal2", create_article),
     path("email", send_mail_console),
     path("400", bad_request, name="400_bad_request"),
-    path("reset_password", reset_password)
+    path("reset_password", reset_password),
+    path("cache", example_expensive_operation),
+    path("cache2", my_cache)
 ]

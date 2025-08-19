@@ -38,8 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'rest_framework',
     'index',
-    'index2'
+    'index2',
+    'api'
 ]
 
 MIDDLEWARE = [
@@ -137,5 +139,16 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "toxa241ff@gmail.com"
-EMAIL_HOST_PASSWORD = "nokc naoc pihd dnua"
+EMAIL_HOST_PASSWORD = "pdja xkvd pvrs jzyp"
 DEFAULT_FROM_EMAIL = "toxa241ff@gmail.com"
+
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://default@127.0.0.1:6379",
+        "TIMEOUT":  300,
+    }
+}
+
+CORS_ORIGIN_ALLOW_ALL = True

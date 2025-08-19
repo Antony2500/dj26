@@ -295,7 +295,7 @@ def create_article(request):
 def send_mail_console(request):
     response = send_mail(
         subject="Registration email",
-        message="Дякуємо, що зареєструвались",
+        message="Дякуємо, що зареєструвались\n ",
         from_email=None,
         recipient_list=['anton.andreiev2003@gmail.com'],
         fail_silently=False,
@@ -349,3 +349,19 @@ def reset_password(request):
         "registration/password_reset.html",
         context={"password_reset_form": password_reset_form}
     )
+
+from django.core.cache import cache
+from django.views.decorators.cache import cache_page
+
+def example_expensive_operation(request):
+    result = cache.get("result")
+    if result is None:
+        result = sum(i * i for i in range(10000000))
+        cache.set("result", result, timeout=10)
+    return HttpResponse(f"{result}")
+
+
+@cache_page(60)
+def my_cache(request):
+    data = sum(i * i for i in range(10000000))
+    return render(request, "cache_template.html", {"cache_data": data})
